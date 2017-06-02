@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<app>
+	<name>T-Frame work</name>
+	<version>0.2</version>
+	<url>http://127.0.0.1/T</url>
+	<server>G:\T</server>
+	<logfile></logfile>
+	<status></status>
+	<unsupportedBrowser></unsupportedBrowser>
+	<database>
+		<type>Mysql</type>
+		<address>localhost</address>
+		<port></port>
+		<user>root</user>
+		<password></password>
+	</database>
+</app>

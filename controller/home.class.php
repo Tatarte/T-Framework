@@ -1,6 +1,11 @@
 <?php 
 class Controller_Home { 
-	
+
+/*
+*	Example of a default controller 
+*	I'm using it right now for my debug activities
+*
+*/
 	private $action;        // Allows the controller to follow a basic behavior based on requested path
 	private $session;  		// Hosts current session manager object
 	
@@ -14,6 +19,7 @@ class Controller_Home {
 		$view = new Model_View;
 		$view->assign("action",$this->action);
 		$view->assign("time",$this->session);
+		$view->render("header");
 		$view->render("home_$this->action");
 		$view->render("footer");
 	}
