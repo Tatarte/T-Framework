@@ -1,7 +1,7 @@
 <?php
 spl_autoload_register(function($class) { return spl_autoload(str_replace('_', DIRECTORY_SEPARATOR, $class.".class"));});
 	
-$config = new Library_Configuration;	
+$config = new Library_Configuration(getcwd().DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.xml");	
 	
 $request = new Library_Request;	 //new Request management object
 $tree=explode('/',$request->getPath());  

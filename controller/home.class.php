@@ -10,7 +10,7 @@ class Controller_Home {
 	private $session;  		// Hosts current session manager object
 	
 	function __construct($action,$session) {
-		$this->action=$action;
+		(isset($action)) ? $this->action=$action : $this->action="test"; //"Test" is default action behavior
 		$this->session=$session;
 	}
 	
