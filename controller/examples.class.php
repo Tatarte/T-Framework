@@ -15,11 +15,17 @@ class Controller_Examples {
 	
 	public function run($request)
 	{
+		$view = new Model_View;
 		if($this->action=="mysql")
 		{
+			try{
 			$db=new Library_MySQLDB("localhost","root","","test"); //get the config from config file
+			} catch (Exception $e){
+				$view->assign("error",$e->getMessage());
+			}
+			$view->assign("data",$db->simpleQuery("SELECT * FROM test"));
 		}
-		$view = new Model_View;
+		
 		$view->assign("action",$this->action);
 		$view->assign("time",$this->session);
 		$view->render("header");
