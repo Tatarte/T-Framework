@@ -3,7 +3,7 @@ class Library_Request {  //Management of an HTTP request
     private $path; 
     private $data;                   // To host query parameters
 	private $method;
-	private $errors = array();       // To host any error message after parameters validation
+	private $errors = array();       // To host any error message after parameters validation (To be replaced by throwing Exceptions?)
 	private $successes = array();    // To host any feedback message successful request
     
     function __construct() {

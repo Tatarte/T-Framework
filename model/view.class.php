@@ -23,7 +23,14 @@ class Model_View {
 		{
 			$path.=$folder.DIRECTORY_SEPARATOR;
 		}
-		include("G:".DIRECTORY_SEPARATOR."T".DIRECTORY_SEPARATOR."view".DIRECTORY_SEPARATOR."$path$file.php");
+		$fullPath="G:".DIRECTORY_SEPARATOR."T".DIRECTORY_SEPARATOR."view".DIRECTORY_SEPARATOR."$path$file.php";
+		if(file_exists($fullPath))
+		{
+			include($fullPath);
+		}else
+		{
+			throw new Exception("Couldn\'t load the corresponding \"$file\" page");
+		}
 	}
 } 
 

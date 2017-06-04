@@ -1,8 +1,13 @@
 <?php
 spl_autoload_register(function($class) { return spl_autoload(str_replace('_', DIRECTORY_SEPARATOR, $class.".class"));});
-	
-$config = new Library_Configuration(getcwd().DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.xml");	
-	
+try
+{	
+	$config = new Library_Configuration(getcwd().DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.xml");	
+}catch (Exception $e)
+{
+		die($e->getMessage());
+}
+
 $request = new Library_Request;	 //new Request management object
 $tree=explode('/',$request->getPath());  
 array_shift($tree);
@@ -15,7 +20,6 @@ if (isset($tree[1]))
 {
 	$action=null;
 }
-
 $controller= new $class($action,microtime(TRUE));
 $controller->run($request);
 ?>
