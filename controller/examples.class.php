@@ -16,14 +16,20 @@ class Controller_Examples {
 	public function run($request)
 	{
 		$view = new Model_View;
-		if($this->action=="mysql")
+		if($this->action=="mysql")  // Mysql example
 		{
 			try{
-			$db=new Library_MySQLDB("localhost","root","","test"); //get the config from config file
+			$db=new Library_MySQLDB($GLOBALS['config']->xml->database->host,$GLOBALS['config']->xml->database->user,$GLOBALS['config']->xml->database->password,$GLOBALS['config']->xml->database->db); //get the config from config file
 			} catch (Exception $e){
 				$view->assign("error",$e->getMessage());
 			}
-			$view->assign("data",$db->simpleQuery("SELECT * FROM test"));
+			if ($request->getData('id'))
+			{
+				$view->assign("data",$db->simpleQuery("SELECT * FROM test WHERE id=?",array('i'=>$request->getData('id'))));
+			}else
+			{
+				$view->assign("data",$db->simpleQuery("SELECT * FROM test"));  //Make only one call with different filters
+			} 
 		}
 		
 		$view->assign("action",$this->action);

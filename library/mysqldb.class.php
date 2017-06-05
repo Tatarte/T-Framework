@@ -13,7 +13,7 @@ class Library_MySQLDB {  //Manages  Mysql database calls
 			throw $e; 
 		}
 		if ($this->mysqli->connect_errno) {
-			throw new Exception("Failed to connect to MySQL: ( $mysqli->connect_errno ) $mysqli->connect_error");
+			throw new Exception("Failed to connect to MySQL: ( ".$this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 		}
 
 	}
@@ -21,16 +21,16 @@ class Library_MySQLDB {  //Manages  Mysql database calls
 	public function simpleQuery($statement,$params=array())
 	{
 		if (!($stmt = $this->mysqli->prepare($statement))) {
-			throw new Exception("Failed to prepare MySQLI statement: ( $mysqli->connect_errno ) $mysqli->connect_error");
+			throw new Exception("Failed to prepare MySQLI statement: ( ".$this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 		}
-		foreach ($params as $param=>$value)
+		foreach ($params as $param=>$value) 
 		{
-			if (!($stmt->bind_param($param,$value))) {
-				throw new Exception("Failed to bind MySQLI statement: ( $mysqli->connect_errno ) $mysqli->connect_error");
+			if (!($stmt->bind_param($param,$value))) { //call_user_func_array instead??
+				throw new Exception("Failed to bind MySQLI statement: (". $this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 			}
 		}
 		if (!$stmt->execute()) {
-			throw new Exception("Failed to execute MySQLI statement: ( $mysqli->connect_errno ) $mysqli->connect_error");
+			throw new Exception("Failed to execute MySQLI statement: ( ".$this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 		}
 		$result = array();
         $stmt->store_result();

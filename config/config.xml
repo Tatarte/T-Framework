@@ -9,10 +9,10 @@
 	<logfile></logfile>
 	<status></status>
 	<unsupportedBrowser></unsupportedBrowser>
-	<database>
-		<type>Mysql</type>
+	<database type='msqli'>
 		<address>localhost</address>
-		<port></port>
+		<db>test</db>
+		<port>3306</port>
 		<user>root</user>
 		<password></password>
 	</database>

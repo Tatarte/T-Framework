@@ -1,13 +1,13 @@
 <?php 
 class Library_Configuration {  //Reads the app configuration settings
     
-	private $xml;
+	public $xml;
 	
     function __construct($configFile) {
 		if(file_exists($configFile))
 		{
 			$this->xml=simplexml_load_file($configFile);
-			define("APP", $this->xml->name);  //SET some global constants
+			define("APP", $this->xml->name);  //SET some global constants  Not necessary to set anymore!
 			define("VERSION", $this->xml->version);
 			define("AUTHOR", $this->xml->author);
 			define("YEAR", $this->xml->year);
