@@ -6,7 +6,7 @@
 	<version>0.2</version>
 	<url>http://127.0.0.1/T</url>
 	<server>G:\T</server>
-	<logfile></logfile>
+	<logfile>logs\logs.txt</logfile>
 	<status></status>
 	<unsupportedBrowser></unsupportedBrowser>
 	<database type='msqli'>

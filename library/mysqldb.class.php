@@ -18,7 +18,7 @@ class Library_MySQLDB {  //Manages  Mysql database calls
 
 	}
 	
-	public function simpleQuery($statement,$params=array())
+	public function simpleQuery($statement,$params=array())  //Handles a simple MySQL query in one call and return an associative array
 	{
 		if (!($stmt = $this->mysqli->prepare($statement))) {
 			throw new Exception("Failed to prepare MySQLI statement: ( ".$this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
@@ -54,6 +54,11 @@ class Library_MySQLDB {  //Manages  Mysql database calls
             
         }
 		return $result;
+	}
+	
+	public function getAutoIncrement()
+	{
+		$this->mysqli->insert_id;
 	}
 } 
 
