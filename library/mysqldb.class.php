@@ -60,6 +60,11 @@ class Library_MySQLDB {  //Manages  Mysql database calls
 	{
 		$this->mysqli->insert_id;
 	}
+	
+	public function close()
+	{
+		$this->mysqli->close();
+	}
 } 
 
 ?> 

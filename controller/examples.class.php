@@ -15,6 +15,11 @@ class Controller_Examples {
 	
 	public function run($request)
 	{
+		if($this->action=="api")  // API example
+		{
+			$json = new Library_json(array("data"=>1,"test"=>"success"));
+			$json->send();
+		}
 		$view = new Model_View;
 		if($this->action=="mysql")  // Mysql example
 		{
