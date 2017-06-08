@@ -1,21 +1,21 @@
 <?php 
 class Library_Python {  //Manages Python scripts
     
-	#private ;
+	private $path;
 	
 	function __construct() { 
-		
+		$this->path=SERVER_ROOT.DIRECTORY_SEPARATOR."scripts".DIRECTORY_SEPARATOR;
 	}
 
 	public function run($script,$args) //Add args format
 	{	
-		$args="";
+		$params="";
 		foreach($args as $key=>$value)
 		{
-			$args.="$key $value";
+			$params.="$key $value";
 		}
-		passthru($script $args,$result)
-	
+		exec($this->path.$script." ".$params,$result);
+
 		return $result;
 	}
 	

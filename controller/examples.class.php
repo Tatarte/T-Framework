@@ -21,6 +21,13 @@ class Controller_Examples {
 			$json->send();
 		}
 		$view = new Model_View;
+		if($this->action=="python")  // API example
+		{
+			$python = new Library_python();
+			$data=$python->run('hello.py',array());
+			$view->assign('script',$data);
+		}
+		
 		if($this->action=="mysql")  // Mysql example
 		{
 			try{
