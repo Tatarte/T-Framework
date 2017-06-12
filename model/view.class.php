@@ -32,6 +32,8 @@ class Model_View {
 			throw new Exception("Couldn\'t load the corresponding \"$file\" page");
 		}
 	}
+	
+	//add a display function if not empty => if request value, etc
 } 
 
 ?> 

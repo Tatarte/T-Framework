@@ -17,9 +17,21 @@ class Controller_Home {
 	public function run($request)
 	{
 		$view = new Model_View;
+		if ($this->action=="test")
+		{
+			try
+			{
+				$request->validate("today","date");
+				
+			}catch (Exception $e)
+			{
+				$view->assign("error",$e->getMessage());
+			}
+		}
+		
 		$view->assign("action",$this->action);
 		$view->assign("time",$this->session);
-		$view->render("header");
+		$view->render("header");		
 		try{
 			$view->render("home_$this->action");
 		} catch (Exception $e)

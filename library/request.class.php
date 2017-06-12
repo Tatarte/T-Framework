@@ -49,13 +49,53 @@ class Library_Request {  //Management of an HTTP request
 	{
 		return (isset($this->action) ?$this->action :null );
 	}
-	public function setError($name,$value)
+	public function setError($name,$value)  //see comment on class declaration
 	{
 		$this->errors[$name]=$value;
 	}
 	public function setSuccess($name,$value)
 	{
 		$this->successes[$name]=$value;
+	}
+	public function validate($param,$type,$notNull=true)
+	{
+		if (isset($this->data[$param]) AND !empty($this->data[$param]))
+		{
+			switch($type)
+			{
+				case "int":
+					if (!filter_var($this->data[$param],FILTER_VALIDATE_INT))
+					{
+						 throw new Exception("Request Parameter ($param) is not an integer");
+					}
+				break;
+				case "date":
+					if (!DateTime::createFromFormat('Y-m-d', $this->data[$param]))  //Should I be able to change the date format??
+					{
+						 throw new Exception("Request Parameter ($param) is not an 'Y-m-d' formatted date");
+					}else
+					{
+						 $temp = explode('-',$this->data[$param]);
+						 if (!checkdate($temp[1],$temp[2],$temp[0]))
+						 {
+							throw new Exception("Request Parameter ($param) is not a valid date");
+						 }
+					}
+				break;
+				case "email":
+					if (!filter_var($this->data[$param],FILTER_VALIDATE_EMAIL))
+					{
+						 throw new Exception("Request Parameter ($param) is not an email");
+					}
+				break;
+				case "url":
+					if (!filter_var($this->data[$param],FILTER_VALIDATE_URL))
+					{
+						 throw new Exception("Request Parameter ($param) is not an url");
+					}
+				break;
+			}
+		}
 	}
 } 
 
