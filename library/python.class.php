@@ -13,10 +13,16 @@ class Library_Python {  //Manages Python scripts
 		foreach($args as $key=>$value)
 		{
 			$params.="$key $value";
-		}
-		exec($this->path.$script." ".$params,$result);
+		}		
+		
+		$a = popen($this->path.$script." ".$params,"r"); 
 
-		return $result;
+		while($b = fgets($a, 2048)) { 
+		echo $b."<br>\n"; 
+		ob_flush();flush(); 
+		} 
+		pclose($a); 
+		
 	}
 	
 } 
