@@ -21,12 +21,6 @@ class Controller_Examples {
 			$json->send();
 		}
 		$view = new Model_View;
-		if($this->action=="python")  // API example
-		{
-			$python = new Library_python();
-			$data=$python->run('hello.py',array());
-			$view->assign('script',$data);
-		}
 		
 		if($this->action=="mysql")  // Mysql example
 		{
@@ -46,7 +40,15 @@ class Controller_Examples {
 		
 		$view->assign("action",$this->action);
 		$view->assign("time",$this->session);
-		$view->render("header");
+		$view->render("header");   //to put in Try
+		if($this->action=="python")  // Python example
+		{
+			$view->render("examples_pythonHeader");
+			$python = new Library_python();
+			$data=$python->run('hello.py',array());
+			$view->assign('script',$data);
+		}
+		
 		try{
 			$view->render("examples_$this->action");
 		} catch (Exception $e)

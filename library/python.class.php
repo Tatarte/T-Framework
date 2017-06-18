@@ -2,6 +2,7 @@
 class Library_Python {  //Manages Python scripts
     
 	private $path;
+	private $result; //?necessary?
 	
 	function __construct() { 
 		$this->path=SERVER_ROOT.DIRECTORY_SEPARATOR."scripts".DIRECTORY_SEPARATOR;
@@ -15,14 +16,19 @@ class Library_Python {  //Manages Python scripts
 			$params.="$key $value";
 		}		
 		
-		$a = popen($this->path.$script." ".$params,"r"); 
+		$process = popen($this->path.$script." ".$params,"r"); 
 
-		while($b = fgets($a, 2048)) { 
-		echo $b."<br>\n"; 
-		ob_flush();flush(); 
-		} 
-		pclose($a); 
-		
+		while($line = fgets($process, 2048))
+		{
+			if ($line[0]=='#')
+			{
+				$this->result=json_decode(trim($line,"#"));
+			}else{
+			echo $line."<br>\n"; 
+			ob_flush();flush(); 
+			} 
+		}
+		pclose($process); 
 	}
 	
 } 

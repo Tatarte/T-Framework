@@ -1,5 +1,11 @@
 <?php
 $timeStart=microtime(TRUE);  //Register the start of execution to display execution time
+
+if (isset($_SERVER['HTTP_USER_AGENT']) &&     (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) //To move to Config?
+{
+	die("<h5>This website doesn't support IE.<br/>Treat yourself, and use a better <a href='https://www.google.ca/chrome/browser/features.html'>browser.</a></h5>");
+}
+
 spl_autoload_register(function($class) { return spl_autoload(str_replace('_', DIRECTORY_SEPARATOR, $class.".class"));});
 try
 {	
