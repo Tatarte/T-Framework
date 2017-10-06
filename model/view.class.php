@@ -8,6 +8,8 @@ class Model_View {
 */
 	private $data = array();  // Holds the data needed to support the display
 	
+	// Add a result format to handle file download and API Json results
+	
 	public function assign($name,$value) 
 	{
 		$this->data[$name]=$value;  
@@ -23,7 +25,7 @@ class Model_View {
 		{
 			$path.=$folder.DIRECTORY_SEPARATOR;
 		}
-		$fullPath="G:".DIRECTORY_SEPARATOR."T".DIRECTORY_SEPARATOR."view".DIRECTORY_SEPARATOR."$path$file.php";
+		$fullPath=SERVER_ROOT.DIRECTORY_SEPARATOR."view".DIRECTORY_SEPARATOR."$path$file.php";
 		if(file_exists($fullPath))
 		{
 			include($fullPath);

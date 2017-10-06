@@ -10,5 +10,7 @@ if (isset($this->data['error']))
 }
 print("<h5>".$this->data['action']."</h5>");
 
+print($GLOBALS['session']->get('user')->getNick());
+
 ?>
 
