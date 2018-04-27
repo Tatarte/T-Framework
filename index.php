@@ -37,6 +37,13 @@ catch (Exception $e)
 
 #$log = new Library_logger($GLOBALS['config']->xml->logfile); // start logs
 $request = new Library_Request;	 //new Request management object
+
+try{
+$db=new Library_MySQLDB($GLOBALS['config']->xml->database->host,$GLOBALS['config']->xml->database->user,$GLOBALS['config']->xml->database->password,$GLOBALS['config']->xml->database->db); //get the config from config file
+} catch (Exception $e){
+	$view->assign("error",$e->getMessage());
+}
+$request->logRequest($db);
 $class = (!$request->getController()) ? "Controller_Home": "Controller_".ucwords($request->getController());  // Selecting the controller from 1st item on path following the site root
 if (!class_exists($class))
 {

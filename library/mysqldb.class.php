@@ -18,14 +18,16 @@ class Library_MySQLDB {  //Manages  Mysql database calls
 
 	}
 	
-	public function simpleQuery($statement,$params=array())  //Handles a simple MySQL query in one call and return an associative array
+	public function simpleQuery($statement,$params=null,$index=null)  //Handles a simple MySQL query in one call and return an associative array
 	{
 		if (!($stmt = $this->mysqli->prepare($statement))) {
 			throw new Exception("Failed to prepare MySQLI statement: ( ".$this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 		}
-		foreach ($params as $param=>$value) 
+		if ($params!=null)
 		{
-			if (!($stmt->bind_param($param,$value))) { //call_user_func_array instead??
+			if(!call_user_func_array(array($stmt,'bind_param'),$params)) // Check reference &passed argument consequences
+			##if (!$stmt->bind_param())
+			{
 				throw new Exception("Failed to bind MySQLI statement: (". $this->mysqli->connect_errno." ) ".$this->mysqli->connect_error);
 			}
 		}
@@ -39,26 +41,73 @@ class Library_MySQLDB {  //Manages  Mysql database calls
         $data = array();
         $meta = $stmt->result_metadata();
         
-        while($field = $meta->fetch_field())
-            $variables[] = &$data[$field->name]; 
-        
-        call_user_func_array(array($stmt, 'bind_result'), $variables);
-        
-        $i=0;
-        while($stmt->fetch())
-        {
-            $result[$i] = array();
-            foreach($data as $k=>$v)
-                $result[$i][$k] = $v;
-            $i++;
-            
-        }
-		return $result;
+		if ($meta!=false)
+		{
+			while($field = $meta->fetch_field())
+				if ($index!=null AND $field->name==$index)  // the field re-arrange doesn't work
+				{
+					array_unshift($variables,null);
+					$variables[0]=&$data[$field->name];
+				}else{
+					$variables[] = &$data[$field->name]; 
+				}
+			
+			call_user_func_array(array($stmt, 'bind_result'), $variables);
+			
+			
+			$i=0;
+			while($stmt->fetch())
+			{
+				if ($index!=null)
+				{
+					$key=null;
+					$multiple=false;
+					foreach($data as $k=>$v)
+						if ($k==$index)
+						{
+							$key=$v;
+							if (isset($result[$key]) AND is_int(key($result[$key]))) // if order is important for ifs not to be triggered in the same loop
+							{
+								array_push($result[$key],array());
+								$multiple=true;
+							}
+							if (isset($result[$key]) AND !is_int(key($result[$key])))
+							{
+								$temp=$result[$key];
+								$result[$key] = array($temp,array());
+								$multiple=true;
+							}
+							if (!isset($result[$key]))
+							{
+								$result[$key] = array();
+								$multiple=false;
+							}
+						}else
+						{
+							if ($multiple)
+							{
+								$result[$key][count($result[$key])-1][$k] = $v;
+							}else
+							{
+								$result[$key][$k] = $v;
+							}
+						}
+				}else
+				{
+					$result[$i] = array();
+					foreach($data as $k=>$v)
+						$result[$i][$k] = $v;
+					$i++;
+				}
+			}
+			return $result;
+		}
+		// else return success??
 	}
 	
 	public function getAutoIncrement()
 	{
-		$this->mysqli->insert_id;
+		return $this->mysqli->insert_id;
 	}
 	
 	public function close()

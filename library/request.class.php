@@ -5,8 +5,7 @@ class Library_Request {  //Management of an HTTP request
 	private $site;			//Site level of the URL
 	private $controller;	//Controller level of the URL
 	private $action;		//Action level of the URL
-	private $errors = array();       // To host any error message after parameters validation (To be replaced by throwing Exceptions?)
-	private $successes = array();    // To host any feedback message successful request
+	private $messages = array();       // To host any error/success/warning message after parameters validation (To be replaced by throwing Exceptions?)
     
     function __construct() {
 		$this->method=$_SERVER['REQUEST_METHOD'];
@@ -49,13 +48,17 @@ class Library_Request {  //Management of an HTTP request
 	{
 		return (isset($this->action) ?$this->action :null );
 	}
-	public function setError($name,$value)  //see comment on class declaration
+	public function setMsg($type,$name,$value)  //see comment on class declaration
 	{
-		$this->errors[$name]=$value;
+		if(!isset($this->messages[$type]))
+		{
+			$this->messages[$type]=array();
+		}
+		$this->messages[$type][$name]=$value;
 	}
-	public function setSuccess($name,$value)
+	public function getMsgs()
 	{
-		$this->successes[$name]=$value;
+		return $this->messages;
 	}
 	public function validate($param,$type,$notNull=true)
 	{
@@ -96,6 +99,14 @@ class Library_Request {  //Management of an HTTP request
 				break;
 			}
 		}
+	}
+	
+	public function logRequest($db)
+	{
+		$params=json_encode($this->data);
+		$controller=($this->controller==null)? "home":$this->controller;
+		$action=($this->action==null)? "default":$this->action;
+		$db->simpleQuery("INSERT INTO requestLog (page,action,parameter) VALUES (?,?,?)",array('sss',&$controller,&$action,&$params));
 	}
 } 
 

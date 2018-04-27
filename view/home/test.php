@@ -10,7 +10,8 @@ if (isset($this->data['error']))
 }
 print("<h5>".$this->data['action']."</h5>");
 
+echo $this->data['chart']->render()."<br/>";
+
 print($GLOBALS['session']->get('user')->getNick());
 
 ?>
-

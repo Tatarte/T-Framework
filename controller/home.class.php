@@ -17,6 +17,9 @@ class Controller_Home {
 	public function run($request)
 	{
 		$view = new Model_View;
+		$chart = new Model_Chart;
+		$view->assign("chart",$chart);
+		#$chart->axisSpanCalculation();
 		if ($this->action=="test")
 		{
 			try
