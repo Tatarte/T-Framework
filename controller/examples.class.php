@@ -9,54 +9,84 @@ class Controller_Examples {
 	private $session;  		// Hosts current session manager object
 	
 	function __construct($action,$session) {
-		(!isset($action)or empty($action)) ? $this->action="home" : $this->action=$action; //"Test" is default action behavior
+		(!isset($action)or empty($action)) ? $this->action="home" : $this->action=$action; //"home" is default action behavior
 		$this->session=$session;
 	}
 	
 	public function run($request)
 	{
-		if($this->action=="api")  // API example
+		$view=null;
+		if($this->action!="api") // API is not yet handled in the view class
 		{
-			$json = new Library_json(array("data"=>1,"test"=>"success"));
-			$json->send();
+			$view = new Model_View;
 		}
-		$view = new Model_View;
 		
-		if($this->action=="mysql")  // Mysql example
+		$action=$this->action;
+		$this->$action($request,$view);
+		
+		if($this->action!="api")
 		{
+			$view->assign("action",$this->action);
+			$view->assign("time",$this->session);
+			if($this->action!="python")
+				$view->render("header");   //to put in Try
+			
 			try{
-			$db=new Library_MySQLDB($GLOBALS['config']->xml->database->host,$GLOBALS['config']->xml->database->user,$GLOBALS['config']->xml->database->password,$GLOBALS['config']->xml->database->db); //get the config from config file
-			} catch (Exception $e){
+				$view->render("examples_$this->action");
+			} catch (Exception $e)
+			{
 				$view->assign("error",$e->getMessage());
+				$view->render("home_test"); // In case of error in loading custom action page, loading default one with Message
 			}
-			if ($request->getData('id'))
-			{
-				$view->assign("data",$db->simpleQuery("SELECT * FROM test WHERE id=?",array('i'=>$request->getData('id'))));
-			}else
-			{
-				$view->assign("data",$db->simpleQuery("SELECT * FROM test"));  //Make only one call with different filters
-			} 
+			$view->render("footer");
 		}
-		
-		$view->assign("action",$this->action);
-		$view->assign("time",$this->session);
-		$view->render("header");   //to put in Try
-		if($this->action=="python")  // Python example
-		{
-			$view->render("examples_pythonHeader");
-			$python = new Library_python();
-			$data=$python->run('hello.py',array());
-			$view->assign('script',$data);
-		}
-		
+	}
+	
+	protected function home($request,$view=null)
+	{
+		//do nothing for now
+	}
+	
+	protected function api($request,$view=null)
+	{
+		$json = new Library_json(array("data"=>1,"test"=>"success"));
+		$json->send();
+	}
+	
+	protected function mysql($request,$view)
+	{
 		try{
-			$view->render("examples_$this->action");
-		} catch (Exception $e)
-		{
-			$view->assign("error",$e->getMessage());
-			$view->render("home_test"); // In case of error in loading custom action page, loading default one with Message
+			$db=new Library_MySQLDB($GLOBALS['config']->xml->database->host,$GLOBALS['config']->xml->database->user,$GLOBALS['config']->xml->database->password,$GLOBALS['config']->xml->database->db); //get the config from config file
+		} catch (Exception $e){
+			$request->setMsg("error","DataBase","Database couldn't be reached!");
 		}
-		$view->render("footer");
+		if ($request->getData('id'))
+		{
+			$view->assign("data",$db->simpleQuery("SELECT * FROM test WHERE id=?",array('i'=>$request->getData('id'))));
+		}else
+		{
+			$view->assign("data",$db->simpleQuery("SELECT * FROM test"));  //Make only one call with different filters
+		} 
+	}
+	
+	protected function python($request,$view)
+	{
+		$view->render("examples_pythonHeader");
+		$python = new Library_python();
+		$data=$python->run('hello.py',array());
+		$view->assign('script',$data);	
+	}
+	
+	protected function  usage($request,$view)
+	{
+		try{
+			$db=new Library_MySQLDB($GLOBALS['config']->xml->database->host,$GLOBALS['config']->xml->database->user,$GLOBALS['config']->xml->database->password,$GLOBALS['config']->xml->database->db); //get the config from config file
+		} catch (Exception $e){
+			$request->setMsg("error","DataBase","Database couldn't be reached!");
+		}
+		
+		$data=$db->simpleQuery("SELECT * FROM requestlog");
+		$view->assign("data",$data);
 	}
 } 
 

@@ -5,4 +5,5 @@
 <li><a href='<?php echo SITE_ROOT?>/examples/mysql'>MySQL library</a></li>
 <li><a href='<?php echo SITE_ROOT?>/examples/python'>Python library</a></li>
 <li><a href='<?php echo SITE_ROOT?>/examples/api'>API library</a></li>
+<li><a href='<?php echo SITE_ROOT?>/examples/usage'>Usage stats</a></li>
 </ul>
